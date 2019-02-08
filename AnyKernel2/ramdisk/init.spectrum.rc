@@ -1,0 +1,67 @@
+# SPECTRUM KERNEL MANAGER
+# Ramdisk file for profile based kernel management
+# Implimentation inspired by Franco's fku profiles
+
+# Initialization
+on property:sys.boot_completed=1
+   # Set default profile on first boot
+   exec u:r:init:s0 root root -- /init.spectrum.sh
+   exec u:r:su:s0 root root -- /init.spectrum.sh
+   # Enable Spectrum support
+   setprop spectrum.support 1
+   # Add kernel name
+   setprop persist.spectrum.kernel octopus kernel
+
+# Balance (default profile)
+on property:persist.spectrum.profile=0
+	write /sys/module/msm_performance/parameters/cpu_max_freq 0:2016000
+	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2016000
+	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor intelliactive
+	write /sys/devices/system/cpu/cpufreq/intelliactive/hispeed_freq 180400
+	write /sys/class/kgsl/kgsl-3d0/max_gpuclk 650000000
+	write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
+	chmod 0664 /sys/module/workqueue/parameters/power_efficient
+    write /sys/module/workqueue/parameters/power_efficient Y
+	exec u:r:magisk:s0 root root -- /init.spectrum.sh
+    
+# Performance
+on property:persist.spectrum.profile=1
+	write /sys/module/msm_performance/parameters/cpu_max_freq 0:2208000
+	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2208000
+	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor performance
+	write /sys/class/kgsl/kgsl-3d0/max_gpuclk 700000000
+	write /sys/class/kgsl/kgsl-3d0/devfreq/governor performance
+	chmod 0664 /sys/module/workqueue/parameters/power_efficient
+    write /sys/module/workqueue/parameters/power_efficient N
+	exec u:r:magisk:s0 root root -- /init.spectrum.sh
+
+# Battery
+on property:persist.spectrum.profile=2
+	write /sys/module/msm_performance/parameters/cpu_max_freq 0:1401600
+	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1401600
+	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
+	write /sys/devices/system/cpu/cpufreq/intelliactive/hispeed_freq 180400
+	write /sys/class/kgsl/kgsl-3d0/max_gpuclk 510000000
+	write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
+	chmod 0664 /sys/module/workqueue/parameters/power_efficient
+    write /sys/module/workqueue/parameters/power_efficient Y
+	exec u:r:magisk:s0 root root -- /init.spectrum.sh
+
+# Gaming
+on property:persist.spectrum.profile=3
+	write /sys/module/msm_performance/parameters/cpu_max_freq 0:2208000
+	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2208000
+	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor darkness
+	write /sys/class/kgsl/kgsl-3d0/max_gpuclk 700000000
+	write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
+	chmod 0664 /sys/module/workqueue/parameters/power_efficient
+    write /sys/module/workqueue/parameters/power_efficient N
+	exec u:r:magisk:s0 root root -- /init.spectrum.sh
