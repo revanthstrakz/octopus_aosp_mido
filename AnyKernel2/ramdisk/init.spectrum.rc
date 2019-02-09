@@ -14,16 +14,15 @@ on property:sys.boot_completed=1
 
 # Balance (default profile)
 on property:persist.spectrum.profile=0
-	write /sys/module/msm_performance/parameters/cpu_max_freq 0:2016000
-	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 2016000
+	write /sys/module/msm_performance/parameters/cpu_max_freq 0:2016000
 	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
-	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor intelliactive
-	write /sys/devices/system/cpu/cpufreq/intelliactive/hispeed_freq 180400
+	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor electron
 	write /sys/class/kgsl/kgsl-3d0/max_gpuclk 650000000
 	write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
 	chmod 0664 /sys/module/workqueue/parameters/power_efficient
     write /sys/module/workqueue/parameters/power_efficient Y
+	write /sys/module/cpu_boost/parameters/input_boost_freq 1401600
 	exec u:r:magisk:s0 root root -- /init.spectrum.sh
     
 # Performance
@@ -41,16 +40,15 @@ on property:persist.spectrum.profile=1
 
 # Battery
 on property:persist.spectrum.profile=2
-	write /sys/module/msm_performance/parameters/cpu_max_freq 0:1401600
-	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq
 	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 1401600
+	write /sys/module/msm_performance/parameters/cpu_max_freq 0:1401600
 	chmod 0644 /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor
 	write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor interactive
-	write /sys/devices/system/cpu/cpufreq/intelliactive/hispeed_freq 180400
 	write /sys/class/kgsl/kgsl-3d0/max_gpuclk 510000000
 	write /sys/class/kgsl/kgsl-3d0/devfreq/governor msm-adreno-tz
 	chmod 0664 /sys/module/workqueue/parameters/power_efficient
     write /sys/module/workqueue/parameters/power_efficient Y
+	write /sys/module/cpu_boost/parameters/input_boost_freq 0
 	exec u:r:magisk:s0 root root -- /init.spectrum.sh
 
 # Gaming
